@@ -23,7 +23,7 @@ export class FileFinder {
   async findFiles(): Promise<FileInfo[]> {
     const files: FileInfo[] = [];
 
-    if (typeof document === 'undefined') {
+    if (typeof document === 'undefined' || !document) {
       throw new Error('This function can only be used in a browser environment');
     }
 
@@ -51,6 +51,7 @@ export class FileFinder {
   private findCSSFiles(): FileInfo[] {
     const cssFiles: FileInfo[] = [];
     const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
+    console.log(linkElements)
     
     linkElements.forEach(link => {
       const href = link.getAttribute('href');
@@ -113,7 +114,8 @@ export class FileFinder {
    */
   private extractFileName(url: string): string {
     const parts = url.split('/');
-    return parts[parts.length - 1] || url;
+    const fileName = parts[parts.length - 1];
+    return fileName || '';
   }
 
   /**
