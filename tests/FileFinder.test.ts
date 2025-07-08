@@ -12,16 +12,30 @@ import {
 } from '../src/core/FileFinder';
 import { FileInfo, FindFilesOptions } from '../src/types';
 
+// Types for mock DOM elements
+interface MockElement {
+  getAttribute(attr: string): string | null;
+}
+
+interface MockGlobal {
+  document: MockDocument | null;
+}
+
+// Interface to access private methods for testing
+interface FileFinderWithPrivateMethods {
+  extractFileName(url: string): string;
+}
+
 // Mock DOM environment
 class MockDocument {
-  private elements: { [key: string]: any[] } = {};
+  private elements: { [key: string]: MockElement[] } = {};
 
-  querySelectorAll(selector: string): any[] {
+  querySelectorAll(selector: string): MockElement[] {
     console.log('Mock querySelectorAll:', selector);
     return this.elements[selector] || [];
   }
 
-  setElements(selector: string, elements: any[]): void {
+  setElements(selector: string, elements: MockElement[]): void {
     this.elements[selector] = elements;
   }
 
@@ -32,11 +46,11 @@ class MockDocument {
 
 // Mock global document
 const mockDocument = new MockDocument();
-(global as any).document = mockDocument;
+(global as unknown as MockGlobal).document = mockDocument;
 
 describe('FileFinder', () => {
   beforeAll(() => {
-    (global as any).document = mockDocument;
+    (global as unknown as MockGlobal).document = mockDocument;
   });
   beforeEach(() => {
     mockDocument.clear();
@@ -68,16 +82,16 @@ describe('FileFinder', () => {
     });
 
     it('should throw error when document is undefined', async () => {
-      const originalDocument = (global as any).document;
-      (global as any).document = null;
-      console.log((global as any).document);
+      const originalDocument = (global as unknown as MockGlobal).document;
+      (global as unknown as MockGlobal).document = null;
+      console.log((global as unknown as MockGlobal).document);
 
       const finder = new FileFinder();
       await expect(finder.findFiles()).rejects.toThrow(
         'This function can only be used in a browser environment'
       );
 
-      (global as any).document = originalDocument;
+      (global as unknown as MockGlobal).document = originalDocument;
     });
 
     it('should find all types of files when all options are enabled', async () => {
@@ -265,16 +279,17 @@ describe('FileFinder', () => {
   describe('extractFileName', () => {
     it('should extract file name from URL', () => {
       const finder = new FileFinder();
+      const finderWithPrivates = finder as unknown as FileFinderWithPrivateMethods;
 
-      // Test private method through public interface
-      expect((finder as any).extractFileName('/path/to/file.js')).toBe(
+      // Test private method through type assertion
+      expect(finderWithPrivates.extractFileName('/path/to/file.js')).toBe(
         'file.js'
       );
       expect(
-        (finder as any).extractFileName('https://example.com/assets/style.css')
+        finderWithPrivates.extractFileName('https://example.com/assets/style.css')
       ).toBe('style.css');
-      expect((finder as any).extractFileName('image.png')).toBe('image.png');
-      expect((finder as any).extractFileName('/')).toBe('');
+      expect(finderWithPrivates.extractFileName('image.png')).toBe('image.png');
+      expect(finderWithPrivates.extractFileName('/')).toBe('');
     });
   });
 
