@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Simple - @imprion91/finding-files</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .demo-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .hero-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            position: relative;
+        }
+        .code-block.simple {
+            background: #1a202c;
+            border: 2px solid #4fd1c7;
+        }
+        .code-block.simple::before {
+            content: "✨ API SIMPLE";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #4fd1c7;
+            color: #1a202c;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .btn-demo {
+            margin: 5px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <h1>🚀 API Simple - @imprion91/finding-files</h1>
+        <p>Une seule fonction pour tout initialiser !</p>
+    </div>
+
+    <div class="container">
+        <div class="demo-card">
+            <h2>📦 Installation</h2>
+            <div class="code-block">
+npm install @imprion91/finding-files
+            </div>
+        </div>
+
+        <div class="demo-card">
+            <h2>⚡ Utilisation Ultra-Simple</h2>
+            
+            <h5>JavaScript :</h5>
+            <div class="code-block simple">
+import { initFindingFiles } from '@imprion91/finding-files';
+
+// C'est tout ! Une seule ligne !
+initFindingFiles();
+            </div>
+
+            <h5>TypeScript :</h5>
+            <div class="code-block simple">
+import { initFindingFiles } from '@imprion91/finding-files';
+
+// C'est tout ! Une seule ligne !
+initFindingFiles();
+            </div>
+
+            <div class="status">
+                <strong>✅ Terminé !</strong> Le widget s'affiche automatiquement et analyse tous les fichiers de la page.
+            </div>
+        </div>
+
+        <div class="demo-card">
+            <h2>🎮 Démonstration Interactive</h2>
+            <p>Testez l'API simple avec les boutons ci-dessous :</p>
+            
+            <div class="text-center">
+                <button id="initBtn" class="btn btn-success btn-demo">
+                    🚀 initFindingFiles()
+                </button>
+                <button id="destroyBtn" class="btn btn-danger btn-demo">
+                    🗑️ destroyFindingFiles()
+                </button>
+                <button id="checkBtn" class="btn btn-info btn-demo">
+                    ❓ isFindingFilesInitialized()
+                </button>
+            </div>
+            
+            <div id="demo-output" class="mt-3">
+                <div class="alert alert-info">
+                    Cliquez sur les boutons pour tester l'API
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-card">
+            <h2>🔧 API Complète</h2>
+            <p>Trois fonctions simples pour tout contrôler :</p>
+            
+            <div class="code-block">
+// Initialiser le widget
+initFindingFiles();
+
+// Détruire le widget
+destroyFindingFiles();
+
+// Vérifier si le widget est actif
+const isActive = isFindingFilesInitialized();
+            </div>
+        </div>
+
+        <div class="demo-card">
+            <h2>🎨 Exemples de fichiers détectés</h2>
+            <p>Cette page utilise plusieurs fichiers pour démontrer le widget :</p>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <h6>CSS</h6>
+                    <small>Bootstrap CDN</small>
+                </div>
+                <div class="col-md-4">
+                    <h6>JS</h6>
+                    <small>Bootstrap + Widget</small>
+                </div>
+                <div class="col-md-4">
+                    <h6>Images</h6>
+                    <img src="https://via.placeholder.com/50x50/007bff/ffffff?text=Demo" alt="Demo image" class="img-fluid">
+                    <img src="https://via.placeholder.com/50x50/28a745/ffffff?text=Test" alt="Test image" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Widget API Simple -->
+    <script type="module">
+        // Import de l'API simple
+        import { initFindingFiles, destroyFindingFiles, isFindingFilesInitialized } from './dist/src/init.js';
+        
+        // Éléments DOM
+        const initBtn = document.getElementById('initBtn');
+        const destroyBtn = document.getElementById('destroyBtn');
+        const checkBtn = document.getElementById('checkBtn');
+        const output = document.getElementById('demo-output');
+        
+        // Fonction pour afficher les messages
+        function showMessage(message, type = 'info') {
+            const alertClass = type === 'error' ? 'alert-danger' : 
+                              type === 'success' ? 'alert-success' : 'alert-info';
+            output.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+        }
+        
+        // Gestionnaires d'événements
+        initBtn.addEventListener('click', () => {
+            try {
+                initFindingFiles();
+                showMessage('✅ Widget initialisé avec succès ! Regardez en haut à droite.', 'success');
+            } catch (error) {
+                showMessage('❌ Erreur lors de l\'initialisation : ' + error.message, 'error');
+            }
+        });
+        
+        destroyBtn.addEventListener('click', () => {
+            try {
+                destroyFindingFiles();
+                showMessage('🗑️ Widget détruit avec succès !', 'success');
+            } catch (error) {
+                showMessage('❌ Erreur lors de la destruction : ' + error.message, 'error');
+            }
+        });
+        
+        checkBtn.addEventListener('click', () => {
+            const isInitialized = isFindingFilesInitialized();
+            const message = isInitialized ? 
+                '✅ Le widget est actif' : 
+                '❌ Le widget n\'est pas actif';
+            showMessage(message, isInitialized ? 'success' : 'info');
+        });
+        
+        // Message initial
+        showMessage('🎮 Prêt ! Cliquez sur "initFindingFiles()" pour commencer.');
+    </script>
+</body>
+</html> 
