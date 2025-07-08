@@ -279,14 +279,17 @@ describe('FileFinder', () => {
   describe('extractFileName', () => {
     it('should extract file name from URL', () => {
       const finder = new FileFinder();
-      const finderWithPrivates = finder as unknown as FileFinderWithPrivateMethods;
+      const finderWithPrivates =
+        finder as unknown as FileFinderWithPrivateMethods;
 
       // Test private method through type assertion
       expect(finderWithPrivates.extractFileName('/path/to/file.js')).toBe(
         'file.js'
       );
       expect(
-        finderWithPrivates.extractFileName('https://example.com/assets/style.css')
+        finderWithPrivates.extractFileName(
+          'https://example.com/assets/style.css'
+        )
       ).toBe('style.css');
       expect(finderWithPrivates.extractFileName('image.png')).toBe('image.png');
       expect(finderWithPrivates.extractFileName('/')).toBe('');
