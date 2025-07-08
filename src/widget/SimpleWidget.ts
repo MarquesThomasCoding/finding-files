@@ -2,20 +2,20 @@ import { FileFinder } from '../core/FileFinder';
 import { FileInfo } from '../types';
 
 export class SimpleFileWidget {
-    private fileFinder: FileFinder;
-    private widgetElement: HTMLElement | null = null;
+  private fileFinder: FileFinder;
+  private widgetElement: HTMLElement | null = null;
 
-    constructor() {
-        this.fileFinder = new FileFinder();
-        this.createWidget();
-        this.scanAndDisplay();
-    }
+  constructor() {
+    this.fileFinder = new FileFinder();
+    this.createWidget();
+    this.scanAndDisplay();
+  }
 
-    private createWidget(): void {
-        // Créer le widget
-        this.widgetElement = document.createElement('div');
-        this.widgetElement.id = 'simple-file-widget';
-        this.widgetElement.innerHTML = `
+  private createWidget(): void {
+    // Créer le widget
+    this.widgetElement = document.createElement('div');
+    this.widgetElement.id = 'simple-file-widget';
+    this.widgetElement.innerHTML = `
             <div class="widget-header">
                 📁 Fichiers utilisés
             </div>
@@ -24,76 +24,80 @@ export class SimpleFileWidget {
             </div>
         `;
 
-        // Injecter les styles
-        this.injectStyles();
+    // Injecter les styles
+    this.injectStyles();
 
-        // Ajouter au DOM
-        document.body.appendChild(this.widgetElement);
+    // Ajouter au DOM
+    document.body.appendChild(this.widgetElement);
+  }
+
+  private async scanAndDisplay(): Promise<void> {
+    try {
+      const files = await this.fileFinder.findFiles();
+      this.displayFiles(files);
+    } catch {
+      this.showError("Erreur lors de l'analyse");
+    }
+  }
+
+  private displayFiles(files: FileInfo[]): void {
+    if (!this.widgetElement) return;
+
+    const contentEl = this.widgetElement.querySelector(
+      '#fileContent'
+    ) as HTMLElement;
+
+    if (files.length === 0) {
+      contentEl.innerHTML = '<div class="empty">Aucun fichier trouvé</div>';
+      return;
     }
 
-    private async scanAndDisplay(): Promise<void> {
-        try {
-            const files = await this.fileFinder.findFiles();
-            this.displayFiles(files);
-        } catch (error) {
-            this.showError('Erreur lors de l\'analyse');
-        }
-    }
+    // Grouper par type
+    const grouped = this.fileFinder.groupByType(files);
+    let html = `<div class="file-count">${files.length} fichier(s)</div>`;
 
-    private displayFiles(files: FileInfo[]): void {
-        if (!this.widgetElement) return;
-
-        const contentEl = this.widgetElement.querySelector('#fileContent') as HTMLElement;
-        
-        if (files.length === 0) {
-            contentEl.innerHTML = '<div class="empty">Aucun fichier trouvé</div>';
-            return;
-        }
-
-        // Grouper par type
-        const grouped = this.fileFinder.groupByType(files);
-        let html = `<div class="file-count">${files.length} fichier(s)</div>`;
-
-        // CSS
-        if (grouped.css && grouped.css.length > 0) {
-            html += `<div class="file-group">
+    // CSS
+    if (grouped.css?.length > 0) {
+      html += `<div class="file-group">
                 <div class="group-title">🎨 CSS (${grouped.css.length})</div>
                 ${grouped.css.map(file => `<div class="file-item">${file.name}</div>`).join('')}
             </div>`;
-        }
+    }
 
-        // JS
-        if (grouped.js && grouped.js.length > 0) {
-            html += `<div class="file-group">
+    // JS
+    if (grouped.js?.length > 0) {
+      html += `<div class="file-group">
                 <div class="group-title">⚡ JS (${grouped.js.length})</div>
                 ${grouped.js.map(file => `<div class="file-item">${file.name}</div>`).join('')}
             </div>`;
-        }
+    }
 
-        // Images
-        if (grouped.image && grouped.image.length > 0) {
-            html += `<div class="file-group">
+    // Images
+    if (grouped.image?.length > 0) {
+      html += `<div class="file-group">
                 <div class="group-title">🖼️ Images (${grouped.image.length})</div>
                 ${grouped.image.map(file => `<div class="file-item">${file.name}</div>`).join('')}
             </div>`;
-        }
-
-        contentEl.innerHTML = html;
     }
 
-    private showError(message: string): void {
-        if (!this.widgetElement) return;
-        
-        const contentEl = this.widgetElement.querySelector('#fileContent') as HTMLElement;
-        contentEl.innerHTML = `<div class="error">${message}</div>`;
-    }
+    contentEl.innerHTML = html;
+  }
 
-    private injectStyles(): void {
-        if (document.getElementById('simple-file-widget-styles')) return;
+  private showError(message: string): void {
+    if (!this.widgetElement) return;
 
-        const style = document.createElement('style');
-        style.id = 'simple-file-widget-styles';
-        style.textContent = `
+    const contentEl = this.widgetElement.querySelector(
+      '#fileContent'
+    ) as HTMLElement;
+    contentEl.innerHTML = `<div class="error">${message}</div>`;
+  }
+
+  private injectStyles(): void {
+    if (document.getElementById('simple-file-widget-styles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'simple-file-widget-styles';
+    style.textContent = `
             #simple-file-widget {
                 position: fixed;
                 top: 20px;
@@ -164,13 +168,13 @@ export class SimpleFileWidget {
             }
         `;
 
-        document.head.appendChild(style);
-    }
+    document.head.appendChild(style);
+  }
 
-    public destroy(): void {
-        if (this.widgetElement) {
-            this.widgetElement.remove();
-            this.widgetElement = null;
-        }
+  public destroy(): void {
+    if (this.widgetElement) {
+      this.widgetElement.remove();
+      this.widgetElement = null;
     }
-} 
+  }
+}
