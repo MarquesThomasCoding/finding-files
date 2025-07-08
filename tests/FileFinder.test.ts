@@ -5,7 +5,11 @@
 /**
  * Tests for FileFinder class
  */
-import { FileFinder, createFileFinder, findAllFiles } from '../src/core/FileFinder';
+import {
+  FileFinder,
+  createFileFinder,
+  findAllFiles,
+} from '../src/core/FileFinder';
 import { FileInfo, FindFilesOptions } from '../src/types';
 
 // Mock DOM environment
@@ -49,7 +53,7 @@ describe('FileFinder', () => {
         includeImages: false,
         includeCSS: true,
         includeJS: false,
-        includeOther: true
+        includeOther: true,
       };
       const finder = new FileFinder(options);
       expect(finder).toBeInstanceOf(FileFinder);
@@ -79,74 +83,131 @@ describe('FileFinder', () => {
     it('should find all types of files when all options are enabled', async () => {
       // Mock CSS files
       mockDocument.setElements('link[rel="stylesheet"]', [
-        { getAttribute: (attr: string) => attr === 'href' ? 'styles.css' : null }
+        {
+          getAttribute: (attr: string) =>
+            attr === 'href' ? 'styles.css' : null,
+        },
       ]);
 
       // Mock JS files
       mockDocument.setElements('script[src]', [
-        { getAttribute: (attr: string) => attr === 'src' ? 'script.js' : null }
+        {
+          getAttribute: (attr: string) => (attr === 'src' ? 'script.js' : null),
+        },
       ]);
 
       // Mock image files
       mockDocument.setElements('img[src]', [
-        { getAttribute: (attr: string) => attr === 'src' ? 'image.png' : null }
+        {
+          getAttribute: (attr: string) => (attr === 'src' ? 'image.png' : null),
+        },
       ]);
 
       const finder = new FileFinder();
       const files = await finder.findFiles();
 
       expect(files).toHaveLength(3);
-      expect(files).toContainEqual({ name: 'styles.css', type: 'css', src: 'styles.css' });
-      expect(files).toContainEqual({ name: 'script.js', type: 'js', src: 'script.js' });
-      expect(files).toContainEqual({ name: 'image.png', type: 'image', src: 'image.png' });
+      expect(files).toContainEqual({
+        name: 'styles.css',
+        type: 'css',
+        src: 'styles.css',
+      });
+      expect(files).toContainEqual({
+        name: 'script.js',
+        type: 'js',
+        src: 'script.js',
+      });
+      expect(files).toContainEqual({
+        name: 'image.png',
+        type: 'image',
+        src: 'image.png',
+      });
     });
   });
 
   describe('findCSSFiles', () => {
     it('should find CSS files', async () => {
       mockDocument.setElements('link[rel="stylesheet"]', [
-        { getAttribute: (attr: string) => attr === 'href' ? '/css/main.css' : null },
-        { getAttribute: (attr: string) => attr === 'href' ? 'https://cdn.example.com/bootstrap.css' : null }
+        {
+          getAttribute: (attr: string) =>
+            attr === 'href' ? '/css/main.css' : null,
+        },
+        {
+          getAttribute: (attr: string) =>
+            attr === 'href' ? 'https://cdn.example.com/bootstrap.css' : null,
+        },
       ]);
 
       const finder = new FileFinder({ includeJS: false, includeImages: false });
       const files = await finder.findFiles();
 
       expect(files).toHaveLength(2);
-      expect(files[0]).toEqual({ name: 'main.css', type: 'css', src: '/css/main.css' });
-      expect(files[1]).toEqual({ name: 'bootstrap.css', type: 'css', src: 'https://cdn.example.com/bootstrap.css' });
+      expect(files[0]).toEqual({
+        name: 'main.css',
+        type: 'css',
+        src: '/css/main.css',
+      });
+      expect(files[1]).toEqual({
+        name: 'bootstrap.css',
+        type: 'css',
+        src: 'https://cdn.example.com/bootstrap.css',
+      });
     });
 
     it('should ignore CSS files when includeCSS is false', async () => {
       mockDocument.setElements('link[rel="stylesheet"]', [
-        { getAttribute: (attr: string) => attr === 'href' ? 'styles.css' : null }
+        {
+          getAttribute: (attr: string) =>
+            attr === 'href' ? 'styles.css' : null,
+        },
       ]);
 
       const finder = new FileFinder({ includeCSS: false });
       const files = await finder.findFiles();
 
-      expect(files).not.toContainEqual(expect.objectContaining({ type: 'css' }));
+      expect(files).not.toContainEqual(
+        expect.objectContaining({ type: 'css' })
+      );
     });
   });
 
   describe('findJSFiles', () => {
     it('should find JavaScript files', async () => {
       mockDocument.setElements('script[src]', [
-        { getAttribute: (attr: string) => attr === 'src' ? '/js/app.js' : null },
-        { getAttribute: (attr: string) => attr === 'src' ? 'https://cdn.example.com/jquery.min.js' : null }
+        {
+          getAttribute: (attr: string) =>
+            attr === 'src' ? '/js/app.js' : null,
+        },
+        {
+          getAttribute: (attr: string) =>
+            attr === 'src' ? 'https://cdn.example.com/jquery.min.js' : null,
+        },
       ]);
 
-      const finder = new FileFinder({ includeCSS: false, includeImages: false });
+      const finder = new FileFinder({
+        includeCSS: false,
+        includeImages: false,
+      });
       const files = await finder.findFiles();
 
       expect(files).toHaveLength(2);
-      expect(files[0]).toEqual({ name: 'app.js', type: 'js', src: '/js/app.js' });
-      expect(files[1]).toEqual({ name: 'jquery.min.js', type: 'js', src: 'https://cdn.example.com/jquery.min.js' });
+      expect(files[0]).toEqual({
+        name: 'app.js',
+        type: 'js',
+        src: '/js/app.js',
+      });
+      expect(files[1]).toEqual({
+        name: 'jquery.min.js',
+        type: 'js',
+        src: 'https://cdn.example.com/jquery.min.js',
+      });
     });
 
     it('should ignore JS files when includeJS is false', async () => {
       mockDocument.setElements('script[src]', [
-        { getAttribute: (attr: string) => attr === 'src' ? 'script.js' : null }
+        {
+          getAttribute: (attr: string) => (attr === 'src' ? 'script.js' : null),
+        },
       ]);
 
       const finder = new FileFinder({ includeJS: false });
@@ -159,37 +220,59 @@ describe('FileFinder', () => {
   describe('findImageFiles', () => {
     it('should find image files', async () => {
       mockDocument.setElements('img[src]', [
-        { getAttribute: (attr: string) => attr === 'src' ? '/images/logo.png' : null },
-        { getAttribute: (attr: string) => attr === 'src' ? 'https://cdn.example.com/banner.jpg' : null }
+        {
+          getAttribute: (attr: string) =>
+            attr === 'src' ? '/images/logo.png' : null,
+        },
+        {
+          getAttribute: (attr: string) =>
+            attr === 'src' ? 'https://cdn.example.com/banner.jpg' : null,
+        },
       ]);
 
       const finder = new FileFinder({ includeCSS: false, includeJS: false });
       const files = await finder.findFiles();
 
       expect(files).toHaveLength(2);
-      expect(files[0]).toEqual({ name: 'logo.png', type: 'image', src: '/images/logo.png' });
-      expect(files[1]).toEqual({ name: 'banner.jpg', type: 'image', src: 'https://cdn.example.com/banner.jpg' });
+      expect(files[0]).toEqual({
+        name: 'logo.png',
+        type: 'image',
+        src: '/images/logo.png',
+      });
+      expect(files[1]).toEqual({
+        name: 'banner.jpg',
+        type: 'image',
+        src: 'https://cdn.example.com/banner.jpg',
+      });
     });
 
     it('should ignore image files when includeImages is false', async () => {
       mockDocument.setElements('img[src]', [
-        { getAttribute: (attr: string) => attr === 'src' ? 'image.png' : null }
+        {
+          getAttribute: (attr: string) => (attr === 'src' ? 'image.png' : null),
+        },
       ]);
 
       const finder = new FileFinder({ includeImages: false });
       const files = await finder.findFiles();
 
-      expect(files).not.toContainEqual(expect.objectContaining({ type: 'image' }));
+      expect(files).not.toContainEqual(
+        expect.objectContaining({ type: 'image' })
+      );
     });
   });
 
   describe('extractFileName', () => {
     it('should extract file name from URL', () => {
       const finder = new FileFinder();
-      
+
       // Test private method through public interface
-      expect((finder as any).extractFileName('/path/to/file.js')).toBe('file.js');
-      expect((finder as any).extractFileName('https://example.com/assets/style.css')).toBe('style.css');
+      expect((finder as any).extractFileName('/path/to/file.js')).toBe(
+        'file.js'
+      );
+      expect(
+        (finder as any).extractFileName('https://example.com/assets/style.css')
+      ).toBe('style.css');
       expect((finder as any).extractFileName('image.png')).toBe('image.png');
       expect((finder as any).extractFileName('/')).toBe('');
     });
@@ -201,7 +284,7 @@ describe('FileFinder', () => {
       const files: FileInfo[] = [
         { name: 'style.css', type: 'css', src: 'style.css' },
         { name: 'script.js', type: 'js', src: 'script.js' },
-        { name: 'image.png', type: 'image', src: 'image.png' }
+        { name: 'image.png', type: 'image', src: 'image.png' },
       ];
 
       const cssFiles = finder.filterByType(files, 'css');
@@ -224,7 +307,7 @@ describe('FileFinder', () => {
       const files: FileInfo[] = [
         { name: 'file1.css', type: 'css', src: 'file1.css' },
         { name: 'file2.js', type: 'js', src: 'file2.js' },
-        { name: 'file3.png', type: 'image', src: 'file3.png' }
+        { name: 'file3.png', type: 'image', src: 'file3.png' },
       ];
 
       expect(finder.countFiles(files)).toBe(3);
@@ -239,7 +322,7 @@ describe('FileFinder', () => {
         { name: 'style1.css', type: 'css', src: 'style1.css' },
         { name: 'style2.css', type: 'css', src: 'style2.css' },
         { name: 'script.js', type: 'js', src: 'script.js' },
-        { name: 'image.png', type: 'image', src: 'image.png' }
+        { name: 'image.png', type: 'image', src: 'image.png' },
       ];
 
       const grouped = finder.groupByType(files);
@@ -275,17 +358,27 @@ describe('FileFinder', () => {
     describe('findAllFiles', () => {
       it('should find all files using utility function', async () => {
         mockDocument.setElements('link[rel="stylesheet"]', [
-          { getAttribute: (attr: string) => attr === 'href' ? 'test.css' : null }
+          {
+            getAttribute: (attr: string) =>
+              attr === 'href' ? 'test.css' : null,
+          },
         ]);
 
         const files = await findAllFiles();
         expect(files).toHaveLength(1);
-        expect(files[0]).toEqual({ name: 'test.css', type: 'css', src: 'test.css' });
+        expect(files[0]).toEqual({
+          name: 'test.css',
+          type: 'css',
+          src: 'test.css',
+        });
       });
 
       it('should find all files with custom options', async () => {
         mockDocument.setElements('link[rel="stylesheet"]', [
-          { getAttribute: (attr: string) => attr === 'href' ? 'test.css' : null }
+          {
+            getAttribute: (attr: string) =>
+              attr === 'href' ? 'test.css' : null,
+          },
         ]);
 
         const files = await findAllFiles({ includeCSS: false });

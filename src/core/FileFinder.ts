@@ -12,7 +12,7 @@ export class FileFinder {
       includeCSS: true,
       includeJS: true,
       includeOther: false,
-      ...options
+      ...options,
     };
   }
 
@@ -24,7 +24,9 @@ export class FileFinder {
     const files: FileInfo[] = [];
 
     if (typeof document === 'undefined' || !document) {
-      throw new Error('This function can only be used in a browser environment');
+      throw new Error(
+        'This function can only be used in a browser environment'
+      );
     }
 
     // Search for CSS files
@@ -51,15 +53,15 @@ export class FileFinder {
   private findCSSFiles(): FileInfo[] {
     const cssFiles: FileInfo[] = [];
     const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
-    console.log(linkElements)
-    
+    console.log(linkElements);
+
     linkElements.forEach(link => {
       const href = link.getAttribute('href');
       if (href) {
         cssFiles.push({
           name: this.extractFileName(href),
           type: 'css',
-          src: href
+          src: href,
         });
       }
     });
@@ -73,14 +75,14 @@ export class FileFinder {
   private findJSFiles(): FileInfo[] {
     const jsFiles: FileInfo[] = [];
     const scriptElements = document.querySelectorAll('script[src]');
-    
+
     scriptElements.forEach(script => {
       const src = script.getAttribute('src');
       if (src) {
         jsFiles.push({
           name: this.extractFileName(src),
           type: 'js',
-          src: src
+          src: src,
         });
       }
     });
@@ -94,14 +96,14 @@ export class FileFinder {
   private findImageFiles(): FileInfo[] {
     const imageFiles: FileInfo[] = [];
     const imgElements = document.querySelectorAll('img[src]');
-    
+
     imgElements.forEach(img => {
       const src = img.getAttribute('src');
       if (src) {
         imageFiles.push({
           name: this.extractFileName(src),
           type: 'image',
-          src: src
+          src: src,
         });
       }
     });
@@ -136,13 +138,16 @@ export class FileFinder {
    * Groups files by type
    */
   groupByType(files: FileInfo[]): Record<string, FileInfo[]> {
-    return files.reduce((acc, file) => {
-      if (!acc[file.type]) {
-        acc[file.type] = [];
-      }
-      acc[file.type].push(file);
-      return acc;
-    }, {} as Record<string, FileInfo[]>);
+    return files.reduce(
+      (acc, file) => {
+        if (!acc[file.type]) {
+          acc[file.type] = [];
+        }
+        acc[file.type].push(file);
+        return acc;
+      },
+      {} as Record<string, FileInfo[]>
+    );
   }
 }
 
@@ -156,7 +161,9 @@ export function createFileFinder(options?: FindFilesOptions): FileFinder {
 /**
  * Utility function to quickly find all files
  */
-export async function findAllFiles(options?: FindFilesOptions): Promise<FileInfo[]> {
+export async function findAllFiles(
+  options?: FindFilesOptions
+): Promise<FileInfo[]> {
   const finder = createFileFinder(options);
   return finder.findFiles();
 }
