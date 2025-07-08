@@ -20,7 +20,10 @@ export default [
       },
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/explicit-function-return-type': [
         'error',
@@ -61,11 +64,6 @@ export default [
     },
   },
   {
-    ignores: [
-      'dist/',
-      'node_modules/',
-      'coverage/',
-      '.eslintrc.cjs'
-    ],
+    ignores: ['dist/', 'node_modules/', 'coverage/', '.eslintrc.cjs'],
   },
 ];
