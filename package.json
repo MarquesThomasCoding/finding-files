@@ -2,7 +2,15 @@
   "name": "@imprion91/finding-files",
   "version": "1.1.0",
   "description": "Looking which file is used in a page? With this library, you'll have a complete list of each files used by the current page.",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -28,6 +36,9 @@
     "url": "https://github.com/MarquesThomasCoding/finding-files/issues"
   },
   "homepage": "https://github.com/MarquesThomasCoding/finding-files#readme",
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@eslint/js": "^9.30.1",
     "@types/jest": "^30.0.0",
