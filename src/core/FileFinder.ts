@@ -23,24 +23,24 @@ export class FileFinder {
   async findFiles(): Promise<FileInfo[]> {
     const files: FileInfo[] = [];
 
-    if (typeof document === 'undefined' || !document) {
+    if (typeof document === 'undefined' || document === null) {
       throw new Error(
         'This function can only be used in a browser environment'
       );
     }
 
     // Search for CSS files
-    if (this.options.includeCSS) {
+    if (this.options.includeCSS === true) {
       files.push(...this.findCSSFiles());
     }
 
     // Search for JavaScript files
-    if (this.options.includeJS) {
+    if (this.options.includeJS === true) {
       files.push(...this.findJSFiles());
     }
 
     // Search for images
-    if (this.options.includeImages) {
+    if (this.options.includeImages === true) {
       files.push(...this.findImageFiles());
     }
 
@@ -53,11 +53,10 @@ export class FileFinder {
   private findCSSFiles(): FileInfo[] {
     const cssFiles: FileInfo[] = [];
     const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
-    console.log(linkElements);
 
     linkElements.forEach(link => {
       const href = link.getAttribute('href');
-      if (href) {
+      if (href !== null && href !== '') {
         cssFiles.push({
           name: this.extractFileName(href),
           type: 'css',
@@ -78,7 +77,7 @@ export class FileFinder {
 
     scriptElements.forEach(script => {
       const src = script.getAttribute('src');
-      if (src) {
+      if (src !== null && src !== '') {
         jsFiles.push({
           name: this.extractFileName(src),
           type: 'js',
@@ -99,7 +98,7 @@ export class FileFinder {
 
     imgElements.forEach(img => {
       const src = img.getAttribute('src');
-      if (src) {
+      if (src !== null && src !== '') {
         imageFiles.push({
           name: this.extractFileName(src),
           type: 'image',
@@ -140,7 +139,7 @@ export class FileFinder {
   groupByType(files: FileInfo[]): Record<string, FileInfo[]> {
     return files.reduce(
       (acc, file) => {
-        if (!acc[file.type]) {
+        if (!(file.type in acc)) {
           acc[file.type] = [];
         }
         acc[file.type].push(file);
