@@ -1,5 +1,5 @@
 {
-  "name": "@rtm/finding-files",
+  "name": "@imprion91/finding-files",
   "version": "1.0.0",
   "description": "Looking which file is used in a page? With this library, you'll have a complete list of each files used by the current page.",
   "main": "index.js",
